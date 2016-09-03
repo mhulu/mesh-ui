@@ -1,8 +1,40 @@
-import App from './pages/App'
-import router from './routers'
-import store from './vuex/store' // vuex store instance
+import Vue from 'vue'
+
+import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
+import registerRouters from './routers'
+import App from './pages/App.vue'
 import { sync } from 'vuex-router-sync'
+import VueValidator from 'vue-validator'
+import { fromNow } from './filters'
+import store from './vuex/store'
+
+import 'nprogress/nprogress.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'font-awesome/css/font-awesome.css'
+import 'perfect-scrollbar/dist/css/perfect-scrollbar.css'
+import 'sweetalert/dist/sweetalert.css'
+import './sass/app.scss'
+
+Vue.use(VueResource)
+Vue.use(VueRouter)
+
+Vue.use(VueValidator)
+Vue.validator('mobile', function (val) {
+  return /(^(13\d|14[57]|15[^4\D]|17[13678]|18\d)\d{8}|170[^346\D]\d{7})$/.test(val)
+})
+Vue.validator('qq', function (val) {
+  return /^[1-9]\d{4,9}$/.test(val)
+})
+Vue.validator('email', function (val) {
+  return /\S+@\S+\.\S+/.test(val)
+})
+Vue.filter('fromNow', fromNow)
+// Object.keys(filters).forEach(k => Vue.filter(k, filters[k]))
+const router = new VueRouter({
+  hashbang: false
+})
 
 sync(store, router)
-
+registerRouters(router)
 router.start(App, '#app')

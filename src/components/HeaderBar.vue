@@ -4,9 +4,16 @@
     <a v-link="{path:'/cart'}">VIEW CART ({{ count }})</a>
   </div>
 </template>
-
-
-
+<script>
+  import {cartCount} from '../vuex/cart/getters'
+  export default {
+    vuex: {
+      getters: {
+        count: cartCount
+      }
+    }
+  }
+</script>
 <style>
 .menu-links a {
   display: inline-block;

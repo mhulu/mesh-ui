@@ -14,7 +14,7 @@
   export default {
     vuex: {
       getters: {
-        product: ({product, route}) => {
+        product: ({products, route}) => {
           var id = parseInt(route.params.id)
           return products.all.find((p) => p.id === id) || {}
         }
