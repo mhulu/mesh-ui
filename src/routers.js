@@ -3,6 +3,8 @@ import {getCookie} from './authService'
 import Login from './pages/Login'
 import Overlay from './components/Overlay'
 import Me from './pages/Me'
+import PopNew from './pages/PopNew'
+import PopEdit from './pages/PopEdit'
 import Security from './pages/Security'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
@@ -27,6 +29,13 @@ export default function (router) {
         // HOME
         '/': {
           component: Home
+        },
+        '/pop/new': {
+          component: PopNew
+        },
+        '/pop/edit': {
+          name: 'PopEdit',
+          component: PopEdit
         },
         '/profile/me': {
           name: 'me',

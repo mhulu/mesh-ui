@@ -48,7 +48,7 @@ export const updateAuthUserInfo = (store, id, data) => {
       title: '操作失败',
       text: '个人资料更新失败，可能由于您长时间未操作或网络不畅通造成，建议您再试一次',
       type: 'error',
-      confirmButtonText: '再试一次'
+      confirmButtonText: '返回重试'
     })
   })
 }

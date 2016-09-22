@@ -1,27 +1,37 @@
 <template>
   <div id="box" class="app-sidebar-fixed app-navbar-fixed ">
     <Toaster></Toaster>
-      <sidebar></sidebar>
-      <div class="app-content">
-        <!-- top navbar -->
-        <top-navbar></top-navbar>
-        <!-- / top navbar -->
-        <!-- main content -->
-        <div  class="main-content">
-          <div class="wrap-content container">
-           <breadcrumb></breadcrumb>
-            <router-view
-             keep-alive
-             transition="fade"
-             transition-mode="out-in"
-             >
-             </router-view>
+    <sidebar></sidebar>
+    <div class="app-content">
+      <!-- top navbar -->
+      <top-navbar></top-navbar>
+      <!-- / top navbar -->
+      <!-- main content -->
+      <div  class="main-content">
+        <div class="wrap-content container">
+         <breadcrumb></breadcrumb>
+         <div class="container-fluid container-fullw">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-white">
+                <div class="panel-body">
+                  <router-view
+                  keep-alive
+                  transition="fade"
+                  transition-mode="out-in"
+                  >
+                </router-view>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- / main content -->
       </div>
-      <!-- <chatbox api="http://demo1429768.mockable.io/messages"></chatbox> -->
+    </div>
   </div>
+  <!-- / main content -->
+</div>
+<!-- <chatbox api="http://demo1429768.mockable.io/messages"></chatbox> -->
+</div>
 </template>
 
 <script>

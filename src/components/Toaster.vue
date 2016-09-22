@@ -28,7 +28,7 @@ export default {
     }
   },
   methods: {
-    showToastr(content,type='error', position='top right'){
+    showToastr(content,type='success', position='top right'){
       this.$refs.toast.setOptions({ maxToasts:3, position: position })
       this.$refs.toast.showToast(content, {
         theme: type,
@@ -64,21 +64,18 @@ export default {
   position: relative;
 }
 .vue-toast_container {
-  position: absolute;
-  z-index: 2046;
-  padding-bottom: 10px;
-  -webkit-transform: translateY(0);
-      -ms-transform: translateY(0);
-          transform: translateY(0);
-  -webkit-transition: opacity .3s ease-out, -webkit-transform .2s ease-out;
-  transition: opacity .3s ease-out, -webkit-transform .2s ease-out;
-  transition: transform .2s ease-out, opacity .3s ease-out;
-  transition: transform .2s ease-out, opacity .3s ease-out, -webkit-transform .2s ease-out;
-  -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-
+    color: #FFF;
+    cursor: default;
+    display: none;
+    font-size: 1.3em;
+    left: 0;
+    opacity: 1;
+    position: fixed;
+    right: 0;
+    text-align: center;
+    z-index: 2000;
+    display: block;
 }
-
 
 .vue-toast_container._default .vue-toast_message {
   background-color: rgba(0,0,0, .9);

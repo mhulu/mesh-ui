@@ -1,13 +1,10 @@
 <template>
-  <div class="container-fluid container-fullw ng-scope">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="panel panel-white">
-        <div class="panel-body">
+<div>
           <h5 class="over-title margin-bottom-15">个人资料</h5>
           <div class="row">
             <div class="col-sm-12">
-              <tabs :active="activeIndex">
+              <div>
+                <tabs :active="activeIndex">
                 <tab header="基本资料">
                   <div class="col-md-4">
                                 <div class="user-left">
@@ -128,7 +125,7 @@
                                 <legend>
                                     填写或更改信息资料
                                 </legend>
-                                <div class="row">
+                                <div class="container">
                                     <div class="col-md-6">
                                             <div class="row">
                                               <div class="col-md-6 col-sm-12">
@@ -136,8 +133,8 @@
                                             <label class="control-label">
                                                 <i class="fa fa-user"></i> 姓名
                                             </label>
-                                            <input type="text" placeholder="输入您的姓名" id="name" class="form-control input-lg" v-model="userInfo.name" 
-                                            v-validate:name="{ required: true, minlength: 2, maxlength: 15, name:true }">
+                                            <input type="text" placeholder="输入您的姓名" id="name" class="form-control input-lg underline" v-model="userInfo.name" 
+                                            v-validate:name="{ minlength: 2, maxlength: 15}">
                                             <p class="text-danger" v-if="$profile.name.minlength">姓名长度不能少于2个字符</p>
                                             <p class="text-danger" v-if="$profile.name.maxlength">姓名长度不能多于15个字符</p>
                                         </div>
@@ -154,7 +151,7 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                             <label class="control-label"><i class="fa fa-mobile-phone"></i> 手机号码</label>
-                                            <input type="text" placeholder="输入您的手机号码" id="mobile" class="form-control input-lg" name="mobile" v-model="userInfo.mobile"
+                                            <input type="text" placeholder="输入您的手机号码" id="mobile" class="form-control input-lg underline" name="mobile" v-model="userInfo.mobile"
                                             v-validate:mobile="{ required: true, mobile:true }">
                                             <p class="text-danger" v-if="$profile.mobile.mobile">手机号码格式不正确</p>
                                         </div>
@@ -162,14 +159,14 @@
                                           <div class="col-md-6">
                                             <div class="form-group">
                                             <label class="control-label"><i class="fa fa-qq"></i> QQ号码</label>
-                                            <input type="text" class="form-control input-lg" id="qq" v-model="userInfo.qq" v-validate:qq="{ qq:true }">      
+                                            <input type="text" class="form-control input-lg underline" id="qq" v-model="userInfo.qq" v-validate:qq="{ qq:true }">      
                                             <p class="text-danger" v-if="$profile.qq.qq">QQ号码格式不正确</p>                                      
                                         </div>
                                           </div>
                                         </div>
                                         <div class="form-group">
                                           <label class="control-label"><i class="fa fa-envelope-o"></i> 电子邮箱</label>
-                                            <input type="email" placeholder="输入您的邮箱地址" id="email" class="form-control input-lg" name="email" v-model="userInfo.email" v-validate:email="{ email:true }">
+                                            <input type="email" placeholder="输入您的邮箱地址" id="email" class="form-control input-lg underline" name="email" v-model="userInfo.email" v-validate:email="{ email:true }">
                                             <p class="text-danger" v-if="$profile.email.email">电子邮件格式不正确</p> 
                                         </div>
                                     </div>
@@ -217,19 +214,16 @@
                         </validator>
                 </tab>
               </tabs>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+          </div>
 </template>
 <script>
   var VueStrap = require('vue-strap/dist/vue-strap.min.js')
   var tabs = VueStrap.tabset
   var tab = VueStrap.tab
-  import datepicker from '../components/Datepicker.vue'
+  import datepicker from '../components/form/Datepicker.vue'
   import {updateAuthUserInfo} from '../vuex/auth/actions'
   export default {
     data () {
@@ -261,7 +255,7 @@
           name: this.userInfo.name,
           sex: this.userInfo.sex,
           birthday: this.time,
-          mobile: this.userInfo.mobile,
+          mobile: this.userInfo.newMobile,
           qq: this.userInfo.qq,
           email: this.userInfo.email,
           avatar: this.userInfo.avatar
@@ -269,7 +263,6 @@
         this.updateAuthUserInfo(formData.id, formData)
       },
       activEditTab () {
-        window.console.log(this.activeIndex)
         this.activeIndex == 0 ? this.activeIndex = 1 : this.activeIndex = 0
       },
       removeImage () {
@@ -293,9 +286,6 @@
   }
   .user-image img {
     max-width: 150px;
-}
-.input-lg {
-  text-align: center;
 }
 .thumbnail {
   margin-bottom: 0;

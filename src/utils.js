@@ -99,6 +99,25 @@ export function toggleClass (wrapperSelector, targetSelector, className) {
   }
 }
 
+export function parseIdentify(id) {
+  var pattern = /^\d{6}(((19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])\d{3}([0-9]|x|X))|(\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])\d{3}))$/
+  if (!pattern.test(id)) {
+    return null
+  }
+  var parse = function (id, sexStr, birthStr) {
+    var res = {}
+    var sex = 1 - id.substr(sexStr, 1) % 2
+    res.sex = sex == '1' ? '女' : '男'
+
+    var year = (birthStr === 2 ? '19' : '') + id.substr(6, birthStr)
+    var month = id.substr(6 + birthStr, 2)
+    var day = id.substr(8 + birthStr, 2)
+    res.birthday = year + '-' + month + '-' +day
+    return res
+  }
+  return parse(id, id.length === 15 ? 14 : 16, id.length === 15 ? 2 : 4)
+}
+
 export function serialize (form) {
   var field = []
   var l = []

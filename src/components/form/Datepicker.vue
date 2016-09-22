@@ -42,7 +42,7 @@ exports.default = {
             'border-radius': '2px',
             'color': '#5F5F5F'
           },
-          placeholder: 'when?',
+          placeholder: '请选择日期',
           buttons: {
             ok: 'OK',
             cancel: 'Cancel'
@@ -786,7 +786,7 @@ table {
       <input
       type="text"
       title="input date"
-      class="cov-datepicker form-control input-lg"
+      class="cov-datepicker form-control input-lg underline"
       readonly="readonly"
       placeholder="{{option.placeholder}}"
       v-model="time"
