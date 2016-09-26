@@ -44,7 +44,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   .nav-tabs {
     margin-bottom: 15px
   }

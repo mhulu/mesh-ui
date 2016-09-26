@@ -31,9 +31,6 @@
           <button class="btn btn-blue pull-right" v-show="currentStep !==1" @click.stop.prevent="prevStep">上一步</button>
       </div>
       </div>
-      <pre>
-        {{validates[currentStep-1]}}
-      </pre>
   </div>
 </template>
 <script>
@@ -127,6 +124,8 @@
     top: 21px;
     width: 100%;
     z-index: 1;
+    transition: .45s ease all;
+    -webkit-transition: .45s ease all;
   }
   .wizard > ul li .stepDesc {
     color: #8e8e93;

@@ -29,7 +29,9 @@
     "vuex": "^0.8.2",
     "vuex-router-sync": "^2.1.0",
     "screenfull": "^3.0.2",
-    "perfect-scrollbar": "^0.6.10"
+    "perfect-scrollbar": "^0.6.10",
+    "font-awesome": "*",
+    "moment": "*"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",

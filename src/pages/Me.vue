@@ -3,8 +3,7 @@
           <h5 class="over-title margin-bottom-15">个人资料</h5>
           <div class="row">
             <div class="col-sm-12">
-              <div>
-                <tabs :active="activeIndex">
+                <tabs :active.sync="activeIndex">
                 <tab header="基本资料">
                   <div class="col-md-4">
                                 <div class="user-left">
@@ -214,7 +213,6 @@
                         </validator>
                 </tab>
               </tabs>
-              </div>
             </div>
           </div>
           </div>
