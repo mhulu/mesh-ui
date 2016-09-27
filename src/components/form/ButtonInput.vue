@@ -1,20 +1,21 @@
 <template>
                   <div class="row">
-                    <div class="col-md-12 form-group">
+                    <div class="col-md-12">
                       <fieldset>
                         <legend>{{title}}</legend>
                         <div class="row">
                           <div class="col-md-2">
-                            <label class="text-bold text-purple label-lg">{{labelName}}</label><span class="badge badge-purple">{{userInfo.sicks.length}}</span>
+                            <label class="text-bold text-purple label-lg">{{label}}</label> <span class="badge badge-purple">{{collection.length}}</span>
                           </div>
                           <div class="col-md-10">
                             <div style="float:left">
-                              <a  v-for="(index, btn) in buttons" style="margin:0 2px 0 2px" class="btn" :class="[styles[index]]" @click.stop.prevent="onClickBtn($event)">{{btn}}</a>
+                              <a  v-for="(index, btn) in buttons" style="margin:0 2px 0 2px" class="btn" :class="[styles[index]]" @click.stop.prevent="onClickBtn($event, index)">{{btn}}</a>
                             </div>
-                            <div style="float:left; margin-left:15px">
+                            <div style="float:left; margin-left:15px" v-show="showInput">
                             <span class="clip-select">
-                              <select v-model="sicks" class="form-control" @change="onChanged()">
-                                <option v-for="option in options.sicks" :value="option">{{option}}</option>
+                              <select v-model="selected" class="form-control" @change="onChanged()">
+                                <option selected>辅助选项</option>
+                                <option v-for="option in currentOption" :value="option">{{option}}</option>
                               </select>
                             </span>
                           </div>
@@ -26,11 +27,11 @@
                             <ul  class="list-unstyled sicks">
                               <li class="margin-top-15">
                                 <input type="text" class="form-control  underline input-title" v-show="showInput" v-el:newtext v-model="newText" :placeholder="'输入' + textPre" @keyup.enter="addNew($event)">
-                                <a class="btn-success add shake" v-show="this.newText.trim() !=''" @click="addNew($event)"><i class="fa fa-plus"></i></a>
+                                <a class="btn-success input-btn flash" v-show="this.newText.trim() !=''" @click="addNew($event)"><i class="fa fa-plus"></i></a>
                               </li>
-                              <li v-for="item in data" track-by="$index">
+                              <li v-for="item in collection" track-by="$index">
                                 <input type="text" v-model="item" class="form-control underline margin-top-15">
-                                <a class="btn-danger destroy" @click="remove(item)"><i class="fa fa-times"></i></a>
+                                <a class="btn-danger input-btn" @click="remove(item)"><i class="fa fa-times"></i></a>
                               </li>
                             </ul>
                           </div>
@@ -40,15 +41,12 @@
                   </div>
 </template>
 <script>
-  import {API_ROOT} from '../../config'
+import _ from 'underscore'
   export default {
     props: {
-      id: {
-        type: String,
-        default: 'id1'
-      },
-      data: {
-        type: Object
+      collection: {
+        type: Array,
+        default: ['aaa', 'bbb']
       },
       title: {
         type: String,
@@ -58,37 +56,50 @@
         type: Array,
         default: ['按钮1', '按钮2', '按钮3']
       },
-      labelName: {
+      label: {
         type: String,
-        default: '病史记录'
-      }
+        default: '记录数目'
+      },
+      options: {}
     },
     data () {
       return {
-        styles: ['btn-purple', 'btn-blue', 'btn-yellow', 'btn-red', 'btn-green', 'btn-azure'],
-        options: {},
+        styles: ['btn-dark-purple', 'btn-blue', 'btn-dark-orange', 'btn-red', 'btn-green', 'btn-azure', 'btn-dark-yellow'],
         showInput: false,
         newText: '',
-        textPre: ''
+        textPre: '',
+        selected: '',
+        currentOption: ''
       }
     },
     methods: {
-      onClickBtn (e) {
+      onClickBtn (e, index) {
+        var keys = _.keys(this.options)
+        if (keys[0] !== '0') {
+          this.currentOption = this.options[keys[index]]
+        } else {
+          this.currentOption = this.options
+        }
+        this.newText = ''
         this.showInput = true
         this.$els.newtext.focus()
         this.textPre = e.target.innerText
       },
       addNew (e) {
-        window.console.log(this.$refs)
+        var value = this.newText && this.newText.trim()
+        if (!value) {
+          return
+        }
+        this.collection.push(this.textPre + ':' + this.newText)
+        this.newText = ''
+      },
+      remove(item) {
+        this.collection.$remove(item)
+      },
+      onChanged () {
+        this.newText += this.selected
       }
-    },
-    ready: function () {
-      this.$http.get(API_ROOT + 'options').then((response) => {
-        this.options = response.data.result
-      }, (response) => {
-        window.console.log('err')
-      })
-    },
+    }
   }
 </script>
 <style>
@@ -103,7 +114,7 @@
   .sicks li{
     position: relative;
   }
-  .add {
+  .input-btn {
     position: absolute;
     top: 0;
     text-align: center;
@@ -119,24 +130,4 @@
     transition: color 0.2s ease-out;
     border:0;
   }
-  .destroy {
-    position: absolute;
-    top: 0;
-    text-align: center;
-    right: 6px;
-    bottom: 0;
-    width: 28px;
-    height: 28px;
-    margin: auto 0;
-    font-size: 18px;
-    color: #fff;
-    background-color: #d21818;
-    margin-bottom: 10px;
-    transition: color 0.2s ease-out;
-    border:0;
-  }
-  .destroy:hover {
-    background-color: #ec6161;
-  }
-
 </style>

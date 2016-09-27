@@ -27,8 +27,8 @@
       </div>
       <div class="row">
       <div class="col-md-12">
-          <button class="btn btn-blue pull-right margin-left-15" :disabled="validates[currentStep-1]"  v-show="currentStep !== steps.length" @click.stop.prevent="nextStep">下一步</button>
-          <button class="btn btn-blue pull-right" v-show="currentStep !==1" @click.stop.prevent="prevStep">上一步</button>
+          <a class="btn btn-blue pull-right margin-left-15" :disabled="validates[currentStep-1]"  v-show="currentStep !== steps.length" @click.stop.prevent="nextStep">下一步</a>
+          <a class="btn btn-blue pull-right" v-show="currentStep !==1" @click.stop.prevent="prevStep">上一步</a>
       </div>
       </div>
   </div>
@@ -73,7 +73,6 @@
   .wizard > ul {
     display: table;
     list-style: none;
-    margin: 0 0 40px 0;
     padding: 10px 0;
     position: relative;
     width: 100%;

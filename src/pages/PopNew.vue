@@ -1,7 +1,6 @@
 <template>
  <div>
   <h5 class="over-title margin-bottom-15">要把档案存到数据库里拢共需<span class="text-bold">4步</span></h5>
-  <div>
     <validator name="validation" :groups="groups">
      <form action="">
       <wizard :steps.sync="steps" :validates.sync="validates">
@@ -31,7 +30,6 @@
             <toggle>
               <div slot="content">
                 <div class="margin-top-15 fadeInUp">
-
                   <div class="row">
                     <div class="col-md-4">
                       <div class="form-group">
@@ -132,46 +130,24 @@
                       </span>
                     </div>
                   </div>
-                  <buttonput title="既往史" data="userInfo.sicks"></buttonput>
+                  <button-input title="既往史" :buttons="sicksBtn" :collection.sync="userInfo.sicks" :options="options.sicks"></button-input>
+                  <button-input title="家族史" :buttons="familyBtn" :collection.sync="userInfo.family" label="家族病史记录" :options="options.sicks"></button-input>
                   <div class="row">
-                    <div class="col-md-12 form-group">
-                      <fieldset>
-                        <legend>家族史</legend>
-                        <div class="row">
-                          <div class="col-md-2">
-                            <label class="text-bold text-purple label-lg">病史记录：</label><span class="badge badge-purple">{{userInfo.family.length}}</span>
-                          </div>
-                          <div class="col-md-6">
-                            <a class="btn btn-green" @click.stop.prevent="onShowFamilyInput($event)">父亲病史 <i class="fa fa-plus"></i></a>
-                            <a class="btn btn-blue"  @click.stop.prevent="onShowFamilyInput($event)">母亲病史 <i class="fa fa-plus"></i></a>
-                            <a class="btn btn-purple"  @click.stop.prevent="onShowFamilyInput($event)">兄弟姐妹病史 <i class="fa fa-plus"></i></a>
-                            <a class="btn btn-azure" @click.stop.prevent="onShowFamilyInput($event)">子女病史 <i class="fa fa-plus"></i></a>
-                          </div>
-                          <div class="col-md-4">
-                            <span class="clip-select">
-                              <select v-model="sicks" class="form-control" @change="onChanged()">
-                                <option v-for="option in options.sicks" :value="option">{{option}}</option>
-                              </select>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-md-12">
-                            <ul  class="list-unstyled sicks">
-                              <li class="margin-top-15">
-                                <input type="text" class="form-control  underline input-title" v-show="showFamilyInput" v-el:newfamily v-model="newFamily" :placeholder="'输入' + sickPre" @keyup.enter="addFamily()">
-                                <a class="btn-success add shake" v-show="this.newFamily.trim() !=''" @click="addFamily()"><i class="fa fa-plus"></i></a>
-                              </li>
-                              <li v-for="family in userInfo.family" track-by="$index">
-                                <input type="text" v-model="family" class="form-control underline margin-top-15">
-                                <a class="btn-danger destroy" @click="removeFamily(family)"><i class="fa fa-times"></i></a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </fieldset>
+                    <div class="col-md-6">
+                      <div class="form-group"><label>遗传病史</label><input v-model="userInfo.inheritance" class="form-control underline" type="text"></div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                      <label>残疾情况</label>
+                      <span class="clip-select">
+                        <select v-model="userInfo.disability" class="form-control">
+                          <option v-for="option in options.disability" :value="option">{{option}}</option>
+                        </select>
+                      </span>
+                      </div>
                     </div>
                   </div>
+                  <button-input title="生活环境" :buttons="envBtn" :collection.sync="userInfo.environment" option-nested="true" :options="options.enviroment"></button-input>
                 </div>
               </div>
             </toggle>
@@ -194,16 +170,17 @@
             
           </div>
         </div>
-      </div>
-    </wizard>
-  </form>
-</validator>
-</div>
+      </wizard>
+    </form>
+  </validator>
+  <pre>
+    {{options|json}}
+  </pre>  
 </div>
 </template>
 
 <script>
-  import buttonput from '../components/form/ButtonInput.vue'
+  import buttonInput from '../components/form/ButtonInput.vue'
   import {API_ROOT} from '../config'
   import wizard from '../components/form/wizard'
   import toggle from '../components/Toggle'
@@ -212,27 +189,29 @@
     data () {
       return {
         options: {},
-        sicks: '',
-        showSicksInput: false,
-        showFamilyInput: false,
-        newSick: '',
-        sickPre: '',
         userInfo: {
           sex: '',
           birthday: '',
           sicks: [],
-          family: []
+          family: [],
+          environment: []
         },
         steps: [{title: '基本信息', desc: '填写居民基本信息'}, {title: '健康体检', desc: '填写居民体检信息'}, {title: '评价指导', desc: '健康评价和指导'}, {title: '完成提交', desc: '核对信息'}],
-        groups: ['profile', 'result', 'guide', 'finish']
+        groups: ['profile', 'result', 'guide', 'finish'],
+        sicksBtn: ['疾病史', '手术史', '外伤史', '输血史'],
+        familyBtn: ['父亲病史', '母亲病史', '兄弟姐妹病史', '子女病史'],
+        envBtn: ['厨房排风设施', '燃料类型', '饮水', '厕所', '禽畜栏'],
+        optionGroup: ['kitchen', 'elding', 'drink', 'lavatory', 'sty']
       }
     },
     ready: function () {
-      this.$http.get(API_ROOT + 'options').then((response) => {
-        this.options = response.data.result
-      }, (response) => {
-        window.console.log('err')
-      })
+      if (window.localStorage.getItem('wemesh.options') === null) {
+        this.$http.get(API_ROOT + 'options').then((response) => {
+          this.options = response.data.result
+          window.localStorage.setItem('wemesh.options', JSON.stringify(this.options))
+        })
+      }
+      this.options = JSON.parse(window.localStorage.getItem('wemesh.options'))
     },
     methods: {
       onSubmit () {
@@ -245,45 +224,10 @@
         var result = parseIdentify(this.userInfo.identify)
         this.userInfo.sex = result.sex
         this.userInfo.birthday = result.birthday
-      },
-      onShowSicksInput (e) {
-        this.showSicksInput = true
-        this.$els.newsick.focus()
-        this.sickPre = e.target.innerText
-      },
-      onShowFamilyInput (e) {
-        this.showFamilyInput = true
-        this.$els.newfamily.focus()
-        this.sickPre = e.target.innerText
-      },
-      onChanged () {
-        this.newSick += this.sicks
-      },
-      addSick () {
-        var value = this.newSick && this.newSick.trim()
-        if (!value) {
-          return
-        }
-        this.userInfo.sicks.push(this.sickPre + ': ' + value)
-        this.newSick = ''
-      },
-      addFamily () {
-        var value = this.newFamily && this.newFamily.trim()
-        if (!value) {
-          return
-        }
-        this.userInfo.family.push(this.sickPre + ':' + value)
-        this.newFamily = ''
-      },
-      removeSick (sick) {
-        this.userInfo.sicks.$remove(sick)
-      },
-      removeFamily (family) {
-        this.userInfo.family.$remove(family)
       }
     },
     components: {
-      toggle, wizard, buttonput
+      toggle, wizard, buttonInput
     },
     computed: {
       validates: function () {
@@ -296,52 +240,3 @@
     }
   }
 </script>
-<style>
-  .label-lg{
-    height: 34px;
-    line-height: 34px;
-    text-align: right;
-  }
-  .input-title{
-    border: 1px dotted #c8c7cc !important;
-  }
-  .sicks li{
-    position: relative;
-  }
-  .add {
-    position: absolute;
-    top: 0;
-    text-align: center;
-    right: 6px;
-    bottom: 0;
-    width: 28px;
-    height: 28px;
-    margin: auto 0;
-    font-size: 18px;
-    color: #fff;
-    background-color: #d21818;
-    margin-bottom: 10px;
-    transition: color 0.2s ease-out;
-    border:0;
-  }
-  .destroy {
-    position: absolute;
-    top: 0;
-    text-align: center;
-    right: 6px;
-    bottom: 0;
-    width: 28px;
-    height: 28px;
-    margin: auto 0;
-    font-size: 18px;
-    color: #fff;
-    background-color: #d21818;
-    margin-bottom: 10px;
-    transition: color 0.2s ease-out;
-    border:0;
-  }
-  .destroy:hover {
-    background-color: #ec6161;
-  }
-
-</style>
